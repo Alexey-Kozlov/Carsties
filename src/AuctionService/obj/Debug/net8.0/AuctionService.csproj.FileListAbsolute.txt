@@ -99,3 +99,4 @@
 /home/alex/Projects/Carsties/src/AuctionService/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
 /home/alex/Projects/Carsties/src/AuctionService/obj/Debug/net8.0/AuctionService.csproj.AssemblyReference.cache
 /home/alex/Projects/Carsties/src/AuctionService/obj/Debug/net8.0/AuctionService.csproj.CopyComplete
+/home/alex/Projects/Carsties/src/AuctionService/obj/Debug/net8.0/AuctionService.sourcelink.json
