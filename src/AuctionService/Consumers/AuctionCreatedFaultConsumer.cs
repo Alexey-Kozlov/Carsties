@@ -14,5 +14,6 @@ public class AuctionCreatedFaultConsumer : IConsumer<Fault<AuctionCreated>>
             context.Message.Message.Model = "Белаз";
             await context.Publish(context.Message.Message);
         }
+        Console.WriteLine("--> Получение сообщения - Ошибка создания аукциона - " + context.Message.FaultedMessageId);
     }
 }

@@ -20,5 +20,6 @@ public class AuctionCreatedConsumer : IConsumer<AuctionCreated>
         //для тестирования обработки ошибок из очереди
         if(item.Model == "Error") throw new ArgumentException("Ошибка машины!");
         await item.SaveAsync();
+        Console.WriteLine("--> Получение сообщения создать аукцион");
     }
 }

@@ -14,5 +14,6 @@ public class AuctionDeletedConsumer : IConsumer<AuctionDeleted>
         {
             throw new MessageException(typeof(AuctionDeleted), "Ошибка удаления записи в MongoDb");
         }
+        Console.WriteLine("--> Получение сообщения удалить аукцион");
     }
 }

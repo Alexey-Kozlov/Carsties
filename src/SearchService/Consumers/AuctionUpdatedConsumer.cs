@@ -33,5 +33,6 @@ public class AuctionUpdatedConsumer : IConsumer<AuctionUpdated>
         {
             throw new MessageException(typeof(AuctionUpdated), "Ошибка обновления записи в MongoDb");
         }
+        Console.WriteLine("--> Получение сообщения обновить аукцион");
     }
 }
