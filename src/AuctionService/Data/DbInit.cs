@@ -71,7 +71,7 @@ public class DbInit
             // 4 Mercedes SLK
             new() {
                 Id = Guid.Parse("155225c1-4448-4066-9886-6786536e05ea"),
-                Status = Status.Нет_в_наличии,
+                Status = Status.НеПродано,
                 ReservePrice = 50000,
                 Seller = "tom",
                 AuctionEnd = DateTime.UtcNow.AddDays(-10),
