@@ -17,6 +17,8 @@ public class CreateAuctionDTO
     [Required]
     public string ImageUrl { get; set; }
     [Required]
+    public IFormFile Image {get; set;}
+    [Required]
     public int ReservePrice { get; set; }
     [Required]
     public DateTime AuctionEnd { get; set; }

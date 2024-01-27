@@ -19,4 +19,5 @@ public class Item: Entity
     public string Color {get; set;}
     public int Mileage {get; set;}
     public string ImageUrl {get; set;}
+    public string Image {get; set;}
 }

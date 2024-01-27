@@ -71,20 +71,16 @@ public class AuctionController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDTO updateAuctionDTO)
+    public async Task<ActionResult> UpdateAuction(Guid id, [FromForm] UpdateAuctionDTO updateAuctionDTO)
     {
         var auction = await _context.Auctions.Include(p => p.Item)
             .FirstOrDefaultAsync(p => p.Id == id);
         if(auction == null) return BadRequest("Запись не найдена");
         if(auction.Seller != User.Identity.Name) return Forbid();
 
-        auction.Item.Make = updateAuctionDTO.Make ?? auction.Item.Make;
-        auction.Item.Model = updateAuctionDTO.Model ?? auction.Item.Model;
-        auction.Item.Color = updateAuctionDTO.Color ?? auction.Item.Color;
-        auction.Item.Mileage = updateAuctionDTO.Mileage ?? auction.Item.Mileage;
-        auction.Item.Year = updateAuctionDTO.Year ?? auction.Item.Year;
-
-       await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
+        _mapper.Map(updateAuctionDTO, auction);
+        var transferAuction = _mapper.Map<AuctionUpdated>(auction);
+        await _publishEndpoint.Publish(transferAuction);
 
         var result = await _context.SaveChangesAsync() > 0;
         if(result) return Ok();
