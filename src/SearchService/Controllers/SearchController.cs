@@ -23,8 +23,8 @@ public class SearchController: ControllerBase
         //сортировка в зависимости от текстового параметра OrderBy
         query = searchParams.OrderBy switch
         {
-            "make" => query.Sort(p => p.Ascending(a => a.Make)),
-            "new" => query.Sort(p => p.Descending(a => a.CreateAt)),
+            "make" => query.Sort(p => p.Ascending(a => a.Make)).Sort(p => p.Ascending(a => a.Model)),
+            "new" => query.Sort(p => p.Descending(a => a.CreateAt)).Sort(p => p.Ascending(a => a.Model)),
             _ => query.Sort(p => p.Ascending(a => a.AuctionEnd))
         };
 

@@ -5,7 +5,7 @@ import Image from 'next/image';
 const empty = require('../../public/Empty.png');
 
 type Props = {
-    image: string;
+    image?: string;
 }
 
 export default function CarImage({ image }: Props) {
