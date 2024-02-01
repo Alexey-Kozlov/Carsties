@@ -2,7 +2,6 @@
 using AuctionService.Entities;
 using AutoMapper;
 using Contracts;
-using MassTransit;
 
 namespace AuctionService.RequestHelpers;
 
@@ -10,8 +9,17 @@ public class MappingProfiles: Profile
 {
     public MappingProfiles()
     {
-        CreateMap<Auction, AuctionDTO>().IncludeMembers(p => p.Item);
-        CreateMap<Item, AuctionDTO>();
+        CreateMap<Auction, AuctionDTO>();
+        CreateMap<Item, AuctionDTO>()
+            .ForMember(dest => dest.Image, opt => opt.MapFrom((src, dest) =>
+                {
+                    if (src.Image != null && src.Image.Length > 0)
+                    {
+                        dest.Image = Convert.ToBase64String(src.Image);                      
+                    }
+                    return dest.Image;
+                })
+            );
         CreateMap<CreateAuctionDTO, Auction>()
             .ForMember(d => d.Item, o => o.MapFrom(s => s));
 
@@ -20,11 +28,7 @@ public class MappingProfiles: Profile
                 {
                     if (src.Image != null && src.Image.Length > 0)
                     {
-                        using (var ms = new MemoryStream())
-                        {
-                            src.Image.CopyTo(ms);
-                            dest.Image = ms.ToArray();
-                        }
+                        dest.Image = Convert.FromBase64String(src.Image.Replace("data:image/jpeg;base64,",""));
                     }
                     return dest.Image;
                 })
@@ -35,9 +39,9 @@ public class MappingProfiles: Profile
         CreateMap<Item, AuctionUpdated>()
             .ForMember(dest => dest.Image, opt => opt.MapFrom((src, dest) =>
                 {
-                    if (src.Image != null && src.Image.Length > 0)
+                    if (src != null && src.Image != null && src.Image.Length > 0)
                     {
-                        dest.Image = Convert.ToBase64String(src.Image);                        
+                            dest.Image = Convert.ToBase64String(src.Image);               
                     }
                     return dest.Image;
                 })
@@ -49,11 +53,7 @@ public class MappingProfiles: Profile
                 {
                     if (src.Image != null && src.Image.Length > 0)
                     {
-                        using (var ms = new MemoryStream())
-                        {
-                            src.Image.CopyTo(ms);
-                            dest.Image = ms.ToArray();
-                        }
+                        dest.Image = Convert.FromBase64String(src.Image.Replace("data:image/jpeg;base64,",""));
                     }
                     return dest.Image;
                 })

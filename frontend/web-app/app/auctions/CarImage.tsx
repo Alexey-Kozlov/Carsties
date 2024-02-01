@@ -10,8 +10,12 @@ type Props = {
 
 export default function CarImage({ image }: Props) {
     const [isLoading, setIsLoading] = useState(true);
+    if(image){
+        console.log(image);
+    }
+
     return (
-        <Image src={image ? `data:image/png;base64, ${image}` : empty}
+        <Image src={image ? `data:image/png;base64 , ${image}` : empty}
             alt=''
             fill
             priority

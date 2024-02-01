@@ -1,4 +1,6 @@
-﻿using AuctionService.Data;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using AuctionService.Data;
 using AuctionService.DTO;
 using AuctionService.Entities;
 using AutoMapper;
@@ -30,13 +32,13 @@ public class AuctionController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<AuctionDTO>>> GetAllAuctions(string date)
     {
-        var query = _context.Auctions.OrderBy(p => p.Item.Make).AsQueryable();
+        var query = _context.Auctions.Include(p => p.Item).OrderBy(p => p.Item.Make).AsQueryable();
         if(!string.IsNullOrEmpty(date))
         {
             query = query.Where(p => p.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
         }
-
-        return await query.ProjectTo<AuctionDTO>(_mapper.ConfigurationProvider).ToListAsync();
+        return _mapper.Map<List<AuctionDTO>>(await query.ToListAsync());
+        //return await query.ProjectTo<AuctionDTO>(_mapper.ConfigurationProvider).ToListAsync();
     }
 
     [HttpGet("{id}")]
@@ -53,8 +55,9 @@ public class AuctionController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<AuctionDTO>> CreateAuction(CreateAuctionDTO auctionDto)
+    public async Task<ActionResult<AuctionDTO>> CreateAuction([FromBody]CreateAuctionDTO auctionDto)
     {
+        Console.WriteLine(JsonSerializer.Serialize(auctionDto));
         var auction = _mapper.Map<Auction>(auctionDto);
         auction.Seller = User.Identity.Name;
         _context.Auctions.Add(auction);
@@ -71,7 +74,7 @@ public class AuctionController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateAuction(Guid id, [FromForm] UpdateAuctionDTO updateAuctionDTO)
+    public async Task<ActionResult> UpdateAuction(Guid id,[FromBody] UpdateAuctionDTO updateAuctionDTO)
     {
         var auction = await _context.Auctions.Include(p => p.Item)
             .FirstOrDefaultAsync(p => p.Id == id);

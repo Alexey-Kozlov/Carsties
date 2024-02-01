@@ -8,6 +8,9 @@ type State = {
     searchValue: string;
     orderBy: string;
     filterBy: string;
+    seller?:string;
+    winner?:string;
+    imageValue?: any;
 }
 
 type Auction = {
@@ -23,7 +26,10 @@ const initialState: State = {
     searchTerm:'',
     searchValue:'',
     orderBy:'new',
-    filterBy: 'live'
+    filterBy: 'live',
+    seller: undefined,
+    winner: undefined,
+    imageValue: undefined
 }
 
 export const useParamsStore = create<State & Auction>()((set) => ({
