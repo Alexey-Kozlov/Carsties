@@ -2,7 +2,6 @@
 
 namespace AuctionService.Entities;
 
-[Table("Items")]
 public class Item
 {
     public Guid Id { get; set; }

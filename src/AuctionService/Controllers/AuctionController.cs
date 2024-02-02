@@ -32,11 +32,15 @@ public class AuctionController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<AuctionDTO>>> GetAllAuctions(string date)
     {
-        var query = _context.Auctions.Include(p => p.Item).OrderBy(p => p.Item.Make).AsQueryable();
+        var query = _context.Auctions
+            .Include(p => p.Item)
+            .OrderBy(p => p.Item.First().Make).AsQueryable();
         if(!string.IsNullOrEmpty(date))
         {
             query = query.Where(p => p.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
         }
+        var dd = await query.ToListAsync();
+        var jj = _mapper.Map<List<AuctionDTO>>(dd);
         return _mapper.Map<List<AuctionDTO>>(await query.ToListAsync());
         //return await query.ProjectTo<AuctionDTO>(_mapper.ConfigurationProvider).ToListAsync();
     }
@@ -57,7 +61,6 @@ public class AuctionController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AuctionDTO>> CreateAuction([FromBody]CreateAuctionDTO auctionDto)
     {
-        Console.WriteLine(JsonSerializer.Serialize(auctionDto));
         var auction = _mapper.Map<Auction>(auctionDto);
         auction.Seller = User.Identity.Name;
         _context.Auctions.Add(auction);
@@ -93,7 +96,7 @@ public class AuctionController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteAuction(Guid id)
+    public async Task<ActionResult> DeleteAuction([FromBody] Guid id)
     {
         var auction = await _context.Auctions.FindAsync(id);
         if(auction == null) return BadRequest("Запись не найдена");

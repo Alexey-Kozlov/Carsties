@@ -17,7 +17,6 @@ const post = async (url: string, body: {}) => {
         headers: await getHeaders(),
         body: JSON.stringify(body)
     }
-    console.log(baseUrl + url);
     const response = await fetch(baseUrl + url, requestOptions);
     return await handleResponse(response);
 }
@@ -45,7 +44,7 @@ const getHeaders = async() =>{
     const token = await getTokenWorkaround();
     const headers: any = {'Content-Type': 'application/json'};
     if(token){
-        headers.Authorization = 'Bearer '  + token?.access_token;
+       headers.Authorization = 'Bearer '  + token?.access_token;
     }
     return headers;
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuctionService.Migrations
 {
     [DbContext(typeof(AuctionDbContext))]
-    [Migration("20240127092619_InitDb")]
-    partial class InitDb
+    [Migration("20240201140558_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,76 +29,103 @@ namespace AuctionService.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("Id");
 
-                    b.Property<DateTime>("AuctionEnd")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime?>("AuctionEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("AuctionEnd");
 
                     b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("CreateAt");
 
                     b.Property<int?>("CurrentHighBid")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("CurrentHighBid");
 
                     b.Property<int>("ReservePrice")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("ReservePrice");
 
                     b.Property<string>("Seller")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Seller");
 
                     b.Property<int?>("SoldAmount")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("SoldAmount");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Status");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("Winner")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Winner");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("Id");
 
-                    b.ToTable("Auctions");
+                    b.HasIndex("Id")
+                        .HasDatabaseName("PK_Auctions");
+
+                    b.ToTable("Auction", (string)null);
                 });
 
             modelBuilder.Entity("AuctionService.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("Id");
 
                     b.Property<Guid>("AuctionId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("AuctionId");
 
                     b.Property<string>("Color")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Color");
 
                     b.Property<byte[]>("Image")
-                        .HasColumnType("bytea");
+                        .HasColumnType("bytea")
+                        .HasColumnName("Image");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("ImageUrl");
 
                     b.Property<string>("Make")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Make");
 
                     b.Property<int>("Mileage")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Mileage");
 
                     b.Property<string>("Model")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Model");
 
                     b.Property<int>("Year")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("Yesr");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_Id");
 
                     b.HasIndex("AuctionId")
-                        .IsUnique();
+                        .HasDatabaseName("FK_Items_Auctions_AuctionId");
 
-                    b.ToTable("Items");
+                    b.HasIndex("Id")
+                        .HasDatabaseName("PK_Items");
+
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
@@ -274,8 +301,8 @@ namespace AuctionService.Migrations
             modelBuilder.Entity("AuctionService.Entities.Item", b =>
                 {
                     b.HasOne("AuctionService.Entities.Auction", "Auction")
-                        .WithOne("Item")
-                        .HasForeignKey("AuctionService.Entities.Item", "AuctionId")
+                        .WithMany("Item")
+                        .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

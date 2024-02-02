@@ -5,35 +5,56 @@ import React, { useEffect } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 import Input from '../components/Input';
 import DateInput from '../components/DateInput';
-import { createAuction } from '../actions/AuctionAction';
-import { useRouter } from 'next/navigation';
+import { createAuction, updateAuction } from '../actions/AuctionAction';
+import { usePathname, useRouter } from 'next/navigation';
 import ImageFileInput from '../components/ImageFileInput';
 import { useParamsStore } from '@/hooks/useParamsStore';
+import toast from 'react-hot-toast';
+import { Auction } from '@/types';
 
-export default function AuctionForm() {
+type Props = {
+    auction?: Auction;
+}
+
+export default function AuctionForm({ auction }: Props) {
 
     const router = useRouter();
+    const pathName = usePathname();
     const imageValue = useParamsStore(state => state.imageValue);
-    const { control, handleSubmit, setFocus,
+    const { control, handleSubmit, setFocus, reset,
         formState: { isSubmitting, isValid } } = useForm({
             mode: 'onTouched'
         });
 
-    useEffect(()=>{
+    useEffect(() => {
+        if (auction) {
+            const { make, model, color, mileage, year } = auction;
+            reset({ make, model, color, mileage, year });
+        }
         setFocus('make');
-    },[setFocus]);
+    }, [setFocus]);
 
     const onSubmit = async (data: FieldValues) => {
         data.image = imageValue;
-        console.log(data);
         try {
-            const res = await createAuction(data);
-            if(res.error){
-                throw new Error(res.error);
+            let id = '';
+            let res;
+            if (pathName === '/auctions/create') {
+                res = await createAuction(data);
+                id = res.id;
+            } else {
+                if (auction) {
+                    res = await updateAuction(data, auction.id);
+                    id = auction.id;
+                }
             }
-            router.push(`/auctions/details/${res.id}`);
-        } catch (error) {
-            console.log(error);
+
+            if (res.error) {
+                throw res.error;
+            }
+            router.push(`/auctions/details/${id}`);
+        } catch (error: any) {
+            toast.error(error.status + ' ' + error.message);
         }
     }
 
@@ -52,22 +73,25 @@ export default function AuctionForm() {
                 <Input label='Пробег' name='mileage' control={control} type='number'
                     rules={{ required: 'Необходимо указать пробег автомобиля!' }} />
             </div>
-            <Input label='Ссылка на изображение' name='imageUrl' control={control}
-                rules={{ required: 'Необходимо указать ссылку на изображение!' }} />
-            <ImageFileInput label='Изображение' name='image' control={control}
-                />
+            <ImageFileInput label='Изображение' name='image' control={control} />
+            {pathName === '/auctions/create' && 
+            <>
 
-            <div className='grid grid-cols-2 gap-3'>
-                <Input label='Начальная цена' name='reservePrice' control={control} type='number'
-                    rules={{ required: 'Укажите стартовую цену автомобиля' }} />
-                <DateInput 
-                    label='Дата/время окончания аукциона' 
-                    name='auctionEnd' 
-                    control={control}
-                    dateFormat='dd.MM.yyyy HH:mm'
-                    showTimeSelect
-                    rules={{ required: 'Необходимо указать дату и время окончания аукциона' }} />
-            </div>
+                <Input label='Примечание' name='imageUrl' control={control}
+                rules={{ required: 'Необходимо указать примечание!' }} />
+                <div className='grid grid-cols-2 gap-3'>
+                    <Input label='Начальная цена' name='reservePrice' control={control} type='number'
+                        rules={{ required: 'Укажите стартовую цену автомобиля' }} />
+                    <DateInput
+                        label='Дата/время окончания аукциона'
+                        name='auctionEnd'
+                        control={control}
+                        dateFormat='dd.MM.yyyy HH:mm'
+                        showTimeSelect
+                        rules={{ required: 'Необходимо указать дату и время окончания аукциона' }} />
+                </div>
+            </>
+            }
 
             <div className='flex justify-between'>
                 <Button outline color='gray'>Отмена</Button>

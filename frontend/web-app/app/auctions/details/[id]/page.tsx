@@ -1,13 +1,50 @@
+import { getDetailedViewData } from '@/app/actions/AuctionAction'
+import Heading from '@/app/components/Heading';
 import React from 'react'
+import CountdownTimer from '../../CountdownTimer';
+import CarImage from '../../CarImage';
+import DetailedSpecs from './DetailedSpecs';
+import { GetCurrentUser } from '@/app/actions/AuthActions';
+import EditButton from './EditButton';
+import DeleteButton from './DeleteButton';
 
-interface Props {
-    params:{
-        id: string;
-    }    
-}
+export default async function Details({ params }: { params: { id: string } }) {
 
-export default function Details(prop: Props) {
+    const data = await getDetailedViewData(params.id);
+    const user = await GetCurrentUser();
+
     return (
-        <div>Details for {prop.params.id}</div>
+        <div>
+            <div className='flex justify-between'>
+                <div className='flex items-center gap-3'>
+                    <Heading title={`${data.make} ${data.model}`} />
+                    {user?.login === data.seller && (
+                        <>
+                        <EditButton id={data.id} />
+                        <DeleteButton id={data.id} />
+                        </>
+                    )}
+                </div>
+
+                <div className='flex gap-3'>
+                    <h3 className='text-2xl font-semibold'>Осталось времени:</h3>
+                    <CountdownTimer auctionEnd={data.auctionEnd} />
+                </div>
+            </div>
+            <div className='grid grid-cols-2 gap-6 mt-3'>
+                <div className='w-full bg-gray-200 aspect-h-10 aspect-w-16 rounded-lg overflow-hidden'>
+                    <CarImage image={data.image} />
+                </div>
+                <div className='border-2 rounded-lg p-2 bg-gray-50'>
+                    <Heading title='Предложения' />
+                </div>
+            </div>
+            <div className='mt-3 grid grid-cols-1 rounded-lg'>
+                <DetailedSpecs auction={data} />
+            </div>
+
+
+        </div>
+
     )
 }

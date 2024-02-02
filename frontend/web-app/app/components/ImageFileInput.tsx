@@ -17,6 +17,7 @@ export default function ImageFileInput(props: Props) {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const file = e.target.files && e.target.files[0];
+
         if(file){
             const reader = new FileReader();
             reader.readAsDataURL(file);

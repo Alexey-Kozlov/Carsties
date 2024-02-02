@@ -4,6 +4,7 @@ import { Auction, PagedResult } from "@/types";
 import { getTokenWorkaround } from "./AuthActions";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import { FieldValues } from "react-hook-form";
+import { revalidatePath } from "next/cache";
 
 export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search${query}`);
@@ -17,4 +18,20 @@ export const updateAuctionTest = async () => {
 
 export const createAuction = async (data: FieldValues) => {
   return await fetchWrapper.post('auctions', data);
+}
+
+export const getDetailedViewData = async (id: string) : Promise<Auction> => {
+  return await fetchWrapper.get(`auctions/${id}`);
+}
+
+export const updateAuction = async (data:FieldValues, id: string) => {
+  const res = await fetchWrapper.put(`auctions/${id}`, data);
+  revalidatePath(`/auctions/${id}`); //обновляем страничку в кеше
+  return res;
+}
+
+export const deleteAuction = async (id:string) => {
+  const res = await fetchWrapper.del(`auctions/${id}`);
+  revalidatePath(`/auctions/${id}`);
+  return res;
 }
