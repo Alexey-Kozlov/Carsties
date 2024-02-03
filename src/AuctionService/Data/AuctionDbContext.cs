@@ -56,7 +56,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(p => p.Year).HasColumnType("integer").HasColumnName("Yesr").IsRequired(true);
         builder.Property(p => p.Color).HasColumnType("text").HasColumnName("Color").IsRequired(false);
         builder.Property(p => p.Mileage).HasColumnType("integer").HasColumnName("Mileage").IsRequired(true);
-        builder.Property(p => p.ImageUrl).HasColumnType("text").HasColumnName("ImageUrl").IsRequired(false);
+        builder.Property(p => p.Description).HasColumnType("text").HasColumnName("Description").IsRequired(false);
         builder.Property(p => p.Image).HasColumnType("bytea").HasColumnName("Image").IsRequired(false);
 
         builder.Property(p => p.AuctionId).HasColumnType("uuid").HasColumnName("AuctionId").IsRequired(true);

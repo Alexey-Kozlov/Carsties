@@ -39,8 +39,6 @@ public class AuctionController : ControllerBase
         {
             query = query.Where(p => p.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
         }
-        var dd = await query.ToListAsync();
-        var jj = _mapper.Map<List<AuctionDTO>>(dd);
         return _mapper.Map<List<AuctionDTO>>(await query.ToListAsync());
         //return await query.ProjectTo<AuctionDTO>(_mapper.ConfigurationProvider).ToListAsync();
     }
@@ -96,7 +94,7 @@ public class AuctionController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteAuction([FromBody] Guid id)
+    public async Task<ActionResult> DeleteAuction(Guid id)
     {
         var auction = await _context.Auctions.FindAsync(id);
         if(auction == null) return BadRequest("Запись не найдена");

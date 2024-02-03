@@ -11,6 +11,8 @@ import ImageFileInput from '../components/ImageFileInput';
 import { useParamsStore } from '@/hooks/useParamsStore';
 import toast from 'react-hot-toast';
 import { Auction } from '@/types';
+import TextAreaInput from '../components/TextAreaInput';
+import CarImage from './CarImage';
 
 type Props = {
     auction?: Auction;
@@ -28,8 +30,8 @@ export default function AuctionForm({ auction }: Props) {
 
     useEffect(() => {
         if (auction) {
-            const { make, model, color, mileage, year } = auction;
-            reset({ make, model, color, mileage, year });
+            const { make, model, color, mileage, year, description, reservePrice, auctionEnd} = auction;
+            reset({ make, model, color, mileage, year, description, reservePrice});
         }
         setFocus('make');
     }, [setFocus]);
@@ -73,26 +75,24 @@ export default function AuctionForm({ auction }: Props) {
                 <Input label='Пробег' name='mileage' control={control} type='number'
                     rules={{ required: 'Необходимо указать пробег автомобиля!' }} />
             </div>
-            <ImageFileInput label='Изображение' name='image' control={control} />
-            {pathName === '/auctions/create' && 
-            <>
+            <div>
+                <ImageFileInput label='Изображение' name='image' control={control} image={auction?.image} />
+            </div>
+            
 
-                <Input label='Примечание' name='imageUrl' control={control}
-                rules={{ required: 'Необходимо указать примечание!' }} />
-                <div className='grid grid-cols-2 gap-3'>
-                    <Input label='Начальная цена' name='reservePrice' control={control} type='number'
-                        rules={{ required: 'Укажите стартовую цену автомобиля' }} />
-                    <DateInput
-                        label='Дата/время окончания аукциона'
-                        name='auctionEnd'
-                        control={control}
-                        dateFormat='dd.MM.yyyy HH:mm'
-                        showTimeSelect
-                        rules={{ required: 'Необходимо указать дату и время окончания аукциона' }} />
-                </div>
-            </>
-            }
 
+            <TextAreaInput label='Примечание' name='description' control={control} />
+            <div className='grid grid-cols-2 gap-3'>
+                <Input label='Начальная цена' name='reservePrice' control={control} type='number'
+                    rules={{ required: 'Укажите стартовую цену автомобиля' }} />
+                <DateInput
+                    label='Дата/время окончания аукциона'
+                    name='auctionEnd'
+                    control={control}
+                    dateFormat='dd.MM.yyyy HH:mm'
+                    showTimeSelect
+                    rules={{ required: 'Необходимо указать дату и время окончания аукциона' }} />
+            </div>
             <div className='flex justify-between'>
                 <Button outline color='gray'>Отмена</Button>
                 <Button
@@ -101,7 +101,8 @@ export default function AuctionForm({ auction }: Props) {
                     outline
                     color='success'
                     disabled={!isValid}
-                >Создать
+                >
+                    {pathName === '/auctions/create' ? 'Создать' : 'Сохранить'}                                        
                 </Button>
             </div>
         </form>

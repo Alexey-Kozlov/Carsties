@@ -7,6 +7,7 @@ type Props = {
     label: string;
     type?: string;
     showLabel?: boolean;
+    image?: string;
 } & UseControllerProps
 
 export default function ImageFileInput(props: Props) {
@@ -29,14 +30,15 @@ export default function ImageFileInput(props: Props) {
         }
     }
 
+    useEffect(() =>{
+        if(props.image){
+            setImageDisplay(`data:image/png;base64 ,${props.image}`);
+        }
+    },[])
+
     return (
-        <div className='flex mb-3 items-center'>
-            {props.showLabel && (
-                <div className='mb-2 block'>
-                    <Label htmlFor={field.name} value={props.label} />
-                </div>
-            )}
-            
+        <div className='flex mb-3 place-content-between'>
+            <div>
             <FileInput 
                     {...props}
                     {...field}
@@ -44,8 +46,10 @@ export default function ImageFileInput(props: Props) {
                     color={fieldState.error ? 'failure' : !fieldState.isDirty ? '' : 'success'}
                     helperText={fieldState.error?.message}
                     onChange={handleFileChange}
-                />
-            <div className='h-52 w-[100%] flex items-center justify-center'>
+                />    
+            </div>           
+
+            <div className='h-52 ml-auto'>
                 <img className='max-h-full max-w-full' src={imageDisplay} />
             </div>
         </div>

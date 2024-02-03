@@ -19,7 +19,7 @@ export type Auction = {
     year: number;
     color: string;
     mileage: number;
-    imageUrl?: string;
+    description?: string;
     image?: string;
     id: string;
   }

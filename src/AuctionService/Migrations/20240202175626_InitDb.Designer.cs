@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuctionService.Migrations
 {
     [DbContext(typeof(AuctionDbContext))]
-    [Migration("20240201140558_Init")]
-    partial class Init
+    [Migration("20240202175626_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,13 +92,13 @@ namespace AuctionService.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Color");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("Description");
+
                     b.Property<byte[]>("Image")
                         .HasColumnType("bytea")
                         .HasColumnName("Image");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("ImageUrl");
 
                     b.Property<string>("Make")
                         .HasColumnType("text")

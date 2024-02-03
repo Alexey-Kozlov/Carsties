@@ -89,13 +89,13 @@ namespace AuctionService.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Color");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("Description");
+
                     b.Property<byte[]>("Image")
                         .HasColumnType("bytea")
                         .HasColumnName("Image");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("ImageUrl");
 
                     b.Property<string>("Make")
                         .HasColumnType("text")

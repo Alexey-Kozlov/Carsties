@@ -9,4 +9,5 @@ public class AuctionUpdated
     public string Color {get; set;}
     public int Mileage {get; set;}
     public string Image {get; set;}
+    public string Description {get; set;}
 }
