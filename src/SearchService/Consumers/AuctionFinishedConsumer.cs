@@ -13,7 +13,7 @@ public class AuctionFinishedConsumer : IConsumer<AuctionFinished>
         if (context.Message.ItemSold)
         {
             auction.Winner = context.Message.Winner;
-            auction.SoldAmount = context.Message.Amount;
+            auction.SoldAmount = context.Message.Amount ?? 0;
         }
         auction.Status = "Finished";
         await auction.SaveAsync();

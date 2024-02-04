@@ -1,6 +1,7 @@
 using AutoMapper;
 using BiddingService.DTO;
 using BiddingService.Models;
+using BiddingService.Services;
 using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +16,13 @@ public class BidsController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly GrpcAuctionClient _grpcClient;
 
-    public BidsController(IMapper mapper, IPublishEndpoint publishEndpoint)
+    public BidsController(IMapper mapper, IPublishEndpoint publishEndpoint, GrpcAuctionClient grpcClient)
     {
         _mapper = mapper;
         _publishEndpoint = publishEndpoint;
+        _grpcClient = grpcClient;
     }
 
     [Authorize]
@@ -27,7 +30,11 @@ public class BidsController : ControllerBase
     public async Task<ActionResult<BidDTO>> PlaceBid(string auctionId, int amount)
     {
         var auction = await DB.Find<Auction>().OneAsync(auctionId);
-        if (auction == null) return NotFound();
+        if (auction == null)
+        {
+            auction = _grpcClient.GetAuction(auctionId);
+            if(auction == null) return BadRequest("Невозможно назначить заявку на этот аукцион - аукцион не найден!");
+        }
         if (auction.Seller == User.Identity.Name)
         {
             return BadRequest("Невозможно подать предложение для собственного аукциона");
