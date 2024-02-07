@@ -1,4 +1,4 @@
-import { getDetailedViewData } from '@/app/actions/AuctionAction'
+import { getBidsForAuction, getDetailedViewData } from '@/app/actions/AuctionAction'
 import Heading from '@/app/components/Heading';
 import React from 'react'
 import CountdownTimer from '../../CountdownTimer';
@@ -7,11 +7,13 @@ import DetailedSpecs from './DetailedSpecs';
 import { GetCurrentUser } from '@/app/actions/AuthActions';
 import EditButton from './EditButton';
 import DeleteButton from './DeleteButton';
+import BidList from './BidList';
 
 export default async function Details({ params }: { params: { id: string } }) {
 
     const data = await getDetailedViewData(params.id);
     const user = await GetCurrentUser();
+ 
 
     return (
         <div>
@@ -35,9 +37,7 @@ export default async function Details({ params }: { params: { id: string } }) {
                 <div className='w-full bg-gray-200 aspect-h-10 aspect-w-16 rounded-lg overflow-hidden'>
                     <CarImage image={data.image} />
                 </div>
-                <div className='border-2 rounded-lg p-2 bg-gray-50'>
-                    <Heading title='Предложения' />
-                </div>
+                <BidList user={user} auction={data} />
             </div>
             <div className='mt-3 grid grid-cols-1 rounded-lg'>
                 <DetailedSpecs auction={data} />

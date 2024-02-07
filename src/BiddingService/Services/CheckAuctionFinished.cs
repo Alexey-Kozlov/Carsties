@@ -29,7 +29,9 @@ public class CheckAuctionFinished : BackgroundService
 
     private async Task CheckAuction(CancellationToken stoppingToken)
     {
-        var finishedAuctions = await DB.Find<Auction>()
+        try
+        {
+            var finishedAuctions = await DB.Find<Auction>()
             .Match(p => p.AuctionEnd <= DateTime.UtcNow)
             .Match(p => !p.Finished)
             .ExecuteAsync(stoppingToken);
@@ -59,6 +61,12 @@ public class CheckAuctionFinished : BackgroundService
                 Seller = auction.Seller
             }, stoppingToken);
         }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка проверки аукционов на завершение");
+        }
+        
     }
 
 }

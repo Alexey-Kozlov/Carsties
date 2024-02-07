@@ -25,8 +25,7 @@ export default function Search() {
             <input 
                 type='text'
                 placeholder='Поиск автомобилей по производителю, модели или цвету'
-                className='flex-grow pl-5 bg-transparent focus:outline-none 
-                border-transparent focus:border-transparent focus:ring-0 text-sm text-gray-600'
+                className='input-custom text-sm text-gray-600'
                 value={searchValue}
                 onChange={onChange}
                 onKeyDown={(e: any) => {

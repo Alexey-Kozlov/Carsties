@@ -13,7 +13,7 @@ type State = {
     imageValue?: any;
 }
 
-type Auction = {
+type Action = {
     setParams: (params: Partial<State>) => void;
     reset: () => void;
     setSearchValue:(value: string) => void;
@@ -32,7 +32,7 @@ const initialState: State = {
     imageValue: undefined
 }
 
-export const useParamsStore = create<State & Auction>()((set) => ({
+export const useParamsStore = create<State & Action>()((set) => ({
     ...initialState,
     setParams:(newParams: Partial<State>) => {
         set((state) =>{
