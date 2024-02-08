@@ -1,5 +1,6 @@
 import { useParamsStore } from '@/hooks/useParamsStore';
 import { Label, FileInput } from 'flowbite-react';
+import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
 import { UseControllerProps, useController } from 'react-hook-form';
 
@@ -34,7 +35,7 @@ export default function ImageFileInput(props: Props) {
         if(props.image){
             setImageDisplay(`data:image/png;base64 ,${props.image}`);
         }
-    },[])
+    },[props.image])
 
     return (
         <div className='flex mb-3 place-content-between'>
@@ -50,7 +51,7 @@ export default function ImageFileInput(props: Props) {
             </div>           
 
             <div className='h-52 ml-auto'>
-                <img className='max-h-full max-w-full' src={imageDisplay} />
+                <Image alt='' className='max-h-full max-w-full' src={imageDisplay} />
             </div>
         </div>
     )

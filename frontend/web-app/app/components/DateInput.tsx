@@ -1,7 +1,6 @@
 import ru from 'date-fns/locale/ru';
 import React from 'react';
 import { UseControllerProps, useController } from 'react-hook-form';
-import 'react-datepicker/dist/react-datepicker.css';
 import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker';
 
 type Props = {

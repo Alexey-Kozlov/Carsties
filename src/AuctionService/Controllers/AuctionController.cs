@@ -4,7 +4,6 @@ using AuctionService.Data;
 using AuctionService.DTO;
 using AuctionService.Entities;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
